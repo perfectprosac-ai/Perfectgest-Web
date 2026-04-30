@@ -537,6 +537,117 @@ Widget _policyLinkButton(String label, String url, {required double fontSize}) {
   );
 }
 
+class SolucoesNuvemPage extends StatelessWidget {
+  const SolucoesNuvemPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Soluções em Nuvem'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            _CloudHeader(),
+            SizedBox(height: 14),
+            _CloudItem(
+              title: 'Desenvolvimento e Deploy Gerenciado',
+              body:
+                  'Eu projeto e coloco seu serviço web no ar via Cloud Run, cuidando de toda a infraestrutura técnica para sua empresa focar no negócio.',
+            ),
+            _CloudItem(
+              title: 'Escalabilidade de Infraestrutura',
+              body:
+                  'Implemento clusters de computação de alta performance no Compute Engine, dimensionando o poder de processamento conforme a sua demanda cresce.',
+            ),
+            _CloudItem(
+              title: 'Gestão Estratégica de Dados',
+              body:
+                  'Configuro e gerencio o armazenamento de grandes volumes de informações no Cloud Storage, garantindo segurança e acesso rápido aos seus ativos digitais.',
+            ),
+            _CloudItem(
+              title: 'Arquitetura de Big Data',
+              body:
+                  'Intermedio a análise de dados complexos com BigQuery, entregando dashboards e insights prontos para apoiar suas decisões comerciais.',
+            ),
+            _CloudItem(
+              title: 'Bancos de Dados Prontos para Uso',
+              body:
+                  'Cuido da configuração e manutenção de instâncias MySQL no Cloud SQL, assegurando que seus dados estejam sempre disponíveis e protegidos.',
+            ),
+            _CloudItem(
+              title: 'Integração e Autenticação com Firebase',
+              body:
+                  'Desenvolvo aplicações modernas utilizando o ecossistema Firebase para entregas rápidas, notificações push e autenticação segura de usuários.',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CloudHeader extends StatelessWidget {
+  const _CloudHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerHighest.withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: cs.outline),
+      ),
+      child: const Text(
+        'Soluções em Nuvem com Implementação Especializada',
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, height: 1.15),
+      ),
+    );
+  }
+}
+
+class _CloudItem extends StatelessWidget {
+  const _CloudItem({required this.title, required this.body});
+
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest.withValues(alpha: 0.40),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: cs.outline.withValues(alpha: 0.7)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
+            Text(body, style: TextStyle(fontSize: 13.3, color: cs.onSurface.withValues(alpha: 0.82), height: 1.35)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Rodapé da home: página própria PerfectPro + referências oficiais Google (medição).
 class _HomeComplianceFooter extends StatelessWidget {
   const _HomeComplianceFooter({required this.onToggleTheme});
@@ -1026,7 +1137,7 @@ class HeroSection extends StatefulWidget {
 }
 
 class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStateMixin {
-  late final AnimationController _ambient = AnimationController(vsync: this, duration: const Duration(seconds: 6));
+  late final AnimationController _ambient = AnimationController(vsync: this, duration: const Duration(seconds: 4));
 
   @override
   void initState() {
@@ -1066,7 +1177,20 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                 animation: _ambient,
                 builder: (context, _) {
                   final pulse = motion ? (0.45 + 0.55 * (0.5 + 0.5 * math.sin(_ambient.value * math.pi * 2))) : 0.55;
+                  final beat = motion ? (0.5 + 0.5 * math.sin(_ambient.value * math.pi * 6)) : 0.5;
                   final borderColor = Color.lerp(cs.outline, cs.primary, pulse * 0.55)!;
+                  final neonPhase = (_ambient.value * 3) % 1;
+                  final neonIndex = (_ambient.value * 3).floor() % 3;
+                  final neonPalette = <Color>[
+                    const Color(0xFF00F5FF),
+                    const Color(0xFFFF2BD6),
+                    const Color(0xFF39FF14),
+                  ];
+                  final neonColor = Color.lerp(
+                    neonPalette[neonIndex],
+                    neonPalette[(neonIndex + 1) % neonPalette.length],
+                    neonPhase,
+                  )!;
                   return Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(26),
@@ -1077,9 +1201,19 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                       boxShadow: motion
                           ? [
                               BoxShadow(
-                                color: cs.primary.withValues(alpha: 0.06 + 0.1 * math.sin(_ambient.value * math.pi * 2)),
-                                blurRadius: 28,
-                                spreadRadius: 0,
+                                color: neonColor.withValues(alpha: 0.30 + (beat * 0.14)),
+                                blurRadius: 28 + (beat * 18),
+                                spreadRadius: 1.2 + (beat * 2.0),
+                              ),
+                              BoxShadow(
+                                color: const Color(0xFF00E1FF).withValues(alpha: 0.10 + (beat * 0.10)),
+                                blurRadius: 44 + (beat * 20),
+                                spreadRadius: 0.6 + (beat * 1.4),
+                              ),
+                              BoxShadow(
+                                color: const Color(0xFFFF2BD6).withValues(alpha: 0.08 + ((1 - beat) * 0.10)),
+                                blurRadius: 38 + ((1 - beat) * 16),
+                                spreadRadius: 0.4 + ((1 - beat) * 1.2),
                               ),
                             ]
                           : [
@@ -1106,6 +1240,41 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                           ),
                         ),
                         const SizedBox(height: 10),
+                        staticDecor
+                            ? ShaderMask(
+                                blendMode: BlendMode.srcIn,
+                                shaderCallback: (bounds) {
+                                  final angle = motion ? _ambient.value * math.pi * 1.25 : 0.0;
+                                  return LinearGradient(
+                                    colors: [
+                                      cs.onSurface.withValues(alpha: 0.55),
+                                      cs.primary,
+                                      cs.onSurface.withValues(alpha: 0.85),
+                                    ],
+                                    stops: const [0.15, 0.5, 0.85],
+                                    transform: GradientRotation(angle),
+                                  ).createShader(bounds);
+                                },
+                                child: const Text(
+                                  'Transformar ideias em apps de alta performance',
+                                  style: TextStyle(
+                                    fontSize: 38,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                'Transformar ideias em apps de alta performance',
+                                style: TextStyle(
+                                  fontSize: 38,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.12,
+                                  color: cs.onSurface,
+                                ),
+                              ),
+                        const SizedBox(height: 10),
                         Semantics(
                           header: true,
                           label: 'Inovacao em Flutter, Java e SDKs',
@@ -1126,12 +1295,12 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                                   },
                                   child: const Text(
                                     'Inovacao em Flutter, Java e SDKs',
-                                    style: TextStyle(fontSize: 38, fontWeight: FontWeight.w800, height: 1.12, color: Colors.white),
+                                    style: TextStyle(fontSize: 30.4, fontWeight: FontWeight.w800, height: 1.12, color: Colors.white),
                                   ),
                                 )
                               : Text(
                                   'Inovacao em Flutter, Java e SDKs',
-                                  style: TextStyle(fontSize: 38, fontWeight: FontWeight.w800, height: 1.12, color: cs.onSurface),
+                                  style: TextStyle(fontSize: 30.4, fontWeight: FontWeight.w800, height: 1.12, color: cs.onSurface),
                                 ),
                         ),
                         const SizedBox(height: 12),
@@ -1144,13 +1313,40 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Text(
-                          'Desenvolvendo o futuro mobile e web com codigo limpo',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: cs.onSurface.withValues(alpha: motion ? 0.72 + 0.08 * math.sin(_ambient.value * math.pi * 2 + 1) : 0.78),
-                          ),
-                        ),
+                        staticDecor
+                            ? ShaderMask(
+                                blendMode: BlendMode.srcIn,
+                                shaderCallback: (bounds) {
+                                  final angle = motion ? _ambient.value * math.pi * 1.25 : 0.0;
+                                  return LinearGradient(
+                                    colors: [
+                                      cs.onSurface.withValues(alpha: 0.55),
+                                      cs.primary,
+                                      cs.onSurface.withValues(alpha: 0.85),
+                                    ],
+                                    stops: const [0.15, 0.5, 0.85],
+                                    transform: GradientRotation(angle),
+                                  ).createShader(bounds);
+                                },
+                                child: const Text(
+                                  'Desenvolvendo o futuro mobile e web com codigo limpo',
+                                  style: TextStyle(
+                                    fontSize: 30.4,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                'Desenvolvendo o futuro mobile e web com codigo limpo',
+                                style: TextStyle(
+                                  fontSize: 30.4,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1.12,
+                                  color: cs.onSurface.withValues(alpha: 0.78),
+                                ),
+                              ),
                       ],
                     ),
                   );
@@ -1351,6 +1547,17 @@ class _PortfolioMotionBlockState extends State<PortfolioMotionBlock> with Single
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => const TecnologiasPage(),
+                ),
+              ),
+              side: BorderSide(color: Theme.of(context).colorScheme.outline),
+              backgroundColor: Theme.of(context).colorScheme.surface,
+            ),
+            ActionChip(
+              avatar: Icon(Icons.cloud_done_rounded, size: 18, color: Theme.of(context).colorScheme.primary),
+              label: const Text('Soluções em nuvem'),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const SolucoesNuvemPage(),
                 ),
               ),
               side: BorderSide(color: Theme.of(context).colorScheme.outline),
