@@ -131,7 +131,19 @@ class _SiteHomePageState extends State<SiteHomePage> {
   @override
   Widget build(BuildContext context) {
     final isMobileNav = MediaQuery.sizeOf(context).width < 980;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
+      floatingActionButton: isMobileNav
+          ? FloatingActionButton.small(
+              tooltip: isDark ? 'Tema claro' : 'Tema escuro',
+              onPressed: widget.onToggleTheme,
+              child: Icon(
+                isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                color: cs.primary,
+              ),
+            )
+          : null,
       bottomNavigationBar: isMobileNav
           ? NavigationBar(
               selectedIndex: _mobileNavIndex,
@@ -1054,6 +1066,12 @@ class SiteHeader extends StatelessWidget {
               ),
             if (!isCompact) const Spacer(),
             if (isCompact)
+              IconButton(
+                tooltip: isDark ? 'Tema claro' : 'Tema escuro',
+                onPressed: onToggleTheme,
+                icon: Icon(isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded, color: cs.primary, size: 22),
+              ),
+            if (isCompact)
               PopupMenuButton<String>(
                 tooltip: 'Abrir menu',
                 icon: Icon(Icons.menu_rounded, color: cs.primary, size: 24),
@@ -1256,9 +1274,9 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                                   ).createShader(bounds);
                                 },
                                 child: const Text(
-                                  'Transformar ideias em apps de alta performance',
+                                  'Tiramos sua ideia do papel com engenharia de software de ponta. Fabricamos ferramentas digitais de alta performance para facilitar o seu dia a dia.\nChega de sistemas lentos. Desenvolvemos apps e soluções web focados em performance, escalabilidade e eficiência máxima para o seu negócio.',
                                   style: TextStyle(
-                                    fontSize: 38,
+                                    fontSize: 19,
                                     fontWeight: FontWeight.w800,
                                     height: 1.12,
                                     color: Colors.white,
@@ -1266,9 +1284,9 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                                 ),
                               )
                             : Text(
-                                'Transformar ideias em apps de alta performance',
+                                'Tiramos sua ideia do papel com engenharia de software de ponta. Fabricamos ferramentas digitais de alta performance para facilitar o seu dia a dia.\nChega de sistemas lentos. Desenvolvemos apps e soluções web focados em performance, escalabilidade e eficiência máxima para o seu negócio.',
                                 style: TextStyle(
-                                  fontSize: 38,
+                                  fontSize: 19,
                                   fontWeight: FontWeight.w800,
                                   height: 1.12,
                                   color: cs.onSurface,
