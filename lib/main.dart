@@ -49,7 +49,7 @@ class _PerfectProSiteAppState extends State<PerfectProSiteApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'PerfectPro',
+      title: 'PerfectGest I',
       theme: buildPerfectProLightTheme(),
       darkTheme: buildPerfectProDarkTheme(),
       themeMode: _themeMode,
@@ -272,7 +272,7 @@ class _SobreNosPageState extends State<SobreNosPage> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Semantics(
-      label: 'Pagina institucional Sobre nos da PerfectPro',
+      label: 'Pagina institucional Sobre nos da PerfectGest I',
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
@@ -323,7 +323,7 @@ class _SobreNosPageState extends State<SobreNosPage> {
                         Semantics(
                           header: true,
                           child: Text(
-                            'PerfectPro',
+                            'PerfectGest I',
                             style: GoogleFonts.inter(
                               fontSize: 13,
                               letterSpacing: 0.6,
@@ -491,7 +491,7 @@ class _SobreNosLegalFooter extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      '© $year PerfectPro. Todos os direitos reservados.',
+                      '© $year PerfectGest I. Todos os direitos reservados.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: 13,
@@ -501,7 +501,7 @@ class _SobreNosLegalFooter extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Marca, logotipos, textos e ilustrações deste site são de uso exclusivo da PerfectPro, salvo indicação em contrário. '
+                      'Marca, logotipos, textos e ilustrações deste site são de uso exclusivo da PerfectGest I, salvo indicação em contrário. '
                       'É proibida a reprodução total ou parcial para fins comerciais sem autorização prévia por escrito.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
@@ -667,7 +667,7 @@ class _HomeComplianceFooter extends StatelessWidget {
         final maxCard = (w < 720 ? w - padH * 2 : 720.0).clamp(200.0, 720.0);
         final stackLinks = w < 440;
         return Semantics(
-          label: 'Privacidade, dados, cookies e termos PerfectPro',
+          label: 'Privacidade, dados, cookies e termos PerfectGest I',
           child: Padding(
             padding: EdgeInsets.fromLTRB(padH, 20, padH, 8),
             child: Center(
@@ -695,7 +695,7 @@ class _HomeComplianceFooter extends StatelessWidget {
                         ),
                         SizedBox(height: w < 360 ? 6 : 8),
                         Text(
-                          'Leia a política completa da PerfectPro (privacidade, dados, cookies e termos). '
+                          'Leia a política completa da PerfectGest I (privacidade, dados, cookies e termos). '
                           'Para serviços Google (ex.: Analytics), aplicam-se também as políticas oficiais do Google.',
                           style: GoogleFonts.inter(
                             fontSize: w < 360 ? 12 : 12.5,
@@ -928,7 +928,7 @@ Future<void> _openSacEmail() async {
       'view': 'cm',
       'fs': '1',
       'to': kEmailSac,
-      'su': 'Contato PerfectPro',
+      'su': 'Contato PerfectGest I',
     });
     await launchUrl(
       gmailCompose,
@@ -940,7 +940,7 @@ Future<void> _openSacEmail() async {
   final uri = Uri(
     scheme: 'mailto',
     path: kEmailSac,
-    queryParameters: const {'subject': 'Contato PerfectPro'},
+    queryParameters: const {'subject': 'Contato PerfectGest I'},
   );
   await launchUrl(uri, mode: LaunchMode.platformDefault);
 }
@@ -1009,7 +1009,7 @@ class SiteHeader extends StatelessWidget {
                     style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 6)),
                     onPressed: _openSiteUrl,
                     child: Text(
-                      'PerfectPro',
+                      'PerfectGest I',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -1025,7 +1025,7 @@ class SiteHeader extends StatelessWidget {
               TextButton(
                 onPressed: _openSiteUrl,
                 child: Text(
-                  'PerfectPro',
+                  'PerfectGest I',
                   style: TextStyle(
                     color: cs.primary,
                     fontSize: 20,
@@ -1230,7 +1230,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                         Semantics(
                           header: true,
                           child: Text(
-                            'PerfectPro',
+                            'PerfectGest I',
                             style: GoogleFonts.inter(
                               fontSize: 13,
                               letterSpacing: 0.5,
@@ -1681,7 +1681,7 @@ class _ContactMotionBlockState extends State<ContactMotionBlock> with TickerProv
               ),
               onPressed: () => _openWhatsApp(
                     prefilledBody:
-                        'Olá! Gostaria de falar com a PerfectPro sobre um projeto.\n\n',
+                        'Olá! Gostaria de falar com a PerfectGest I sobre um projeto.\n\n',
                   ),
               icon: const Icon(Icons.send_rounded),
               label: const Text('Enviar mensagem (WhatsApp)'),
