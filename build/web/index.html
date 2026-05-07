@@ -14,7 +14,7 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="/">
+  <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -48,6 +48,14 @@
   <link rel="manifest" href="manifest.json">
   <!-- Descobre o bootstrap mais cedo (não bloqueia parsing; ajuda o browser a planear a rede) -->
   <link rel="preload" href="flutter_bootstrap.js" as="script">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-N4BVXV4HBC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-N4BVXV4HBC');
+  </script>
 </head>
 <body>
   <!--
@@ -58,63 +66,6 @@
     For more details:
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
-  <!-- Consent Mode v2 (Google): default negado para anúncios; analytics conforme preferência em localStorage (pp_cookie_consent). Substituir G-XXXXXXXXXX pelo ID real. -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    (function () {
-      var analytics = 'denied';
-      try {
-        if (localStorage.getItem('pp_cookie_consent') === 'granted') analytics = 'granted';
-      } catch (e) {}
-      gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': analytics,
-        'functionality_storage': 'granted',
-        'personalization_storage': 'denied',
-        'security_storage': 'granted',
-        'wait_for_update': 500
-      });
-    })();
-  </script>
-  <!-- GA: só carrega o script externo se o utilizador já aceitou medição (localStorage), após load + idle — menos concorrência com Flutter e ~0 bytes se recusou. Após aceitar na barra, recarregar a página (como já indicado na app). -->
-  <script>
-    (function () {
-      function analyticsGranted() {
-        try {
-          return localStorage.getItem('pp_cookie_consent') === 'granted';
-        } catch (e) {
-          return false;
-        }
-      }
-      function injectGtag() {
-        if (window.__ppGtagInjected) return;
-        window.__ppGtagInjected = true;
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QDKSY8XJ96';
-        s.onload = function () {
-          try {
-            gtag('js', new Date());
-            gtag('config', 'G-QDKSY8XJ96', { anonymize_ip: true });
-          } catch (e) {}
-        };
-        document.head.appendChild(s);
-      }
-      function scheduleInject() {
-        if (!analyticsGranted()) return;
-        var run = function () { injectGtag(); };
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(run, { timeout: 4000 });
-        } else {
-          setTimeout(run, 2000);
-        }
-      }
-      window.addEventListener('load', scheduleInject);
-    })();
-  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
