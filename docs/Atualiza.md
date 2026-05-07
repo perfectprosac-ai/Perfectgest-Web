@@ -780,3 +780,42 @@ Preencher esta secao ao final de cada entrega relevante. Quando nao houver dado,
 ### Proximos passos recomendados
 - Rebuild local (`npm run build:web:sync`) e atualizar no `localhost`.
 - Publicar no remoto para refletir online.
+
+## [2026-05-07 14:37] Ajuste de TBT/CLS com carregamento progressivo por interacao
+
+### Contexto
+- Pedido: diagnostico de performance com foco em thread principal/TBT, tarefas longas e CLS.
+- Escopo: estrategia de carregamento inicial da home em `lib/main.dart`.
+
+### Arquivos alterados
+- lib/main.dart
+- docs/Atualiza.md
+
+### O que foi feito
+- Removido carregamento automatico temporizado das secoes pesadas apos 900ms.
+- Alterado para carregar secoes pesadas somente por interacao real:
+  - scroll (`offset > 48`) ou navegacao para ancora.
+- Mantido placeholder inicial para as secoes, agora com alturas estimadas maiores para reduzir salto visual:
+  - Solucoes: `500`
+  - Portfolio: `340`
+  - Contato: `320`
+  - Footer de compliance: `250`
+- Reutilizados `GlobalKey`s nas secoes placeholder para manter navegacao consistente antes da hidratacao completa.
+
+### Risco de regressao
+- Medio: alteracao de comportamento de carregamento progressivo.
+- Pontos sensiveis: validar experiencia ao clicar no menu antes de scroll.
+
+### Validacao executada
+- [x] Revisao manual da logica e layout
+- [ ] Build local
+- [ ] Teste manual de navegacao por ancora
+- [ ] Reavaliacao PSI/Lighthouse
+
+### Resultado
+- Comportamento esperado apos a mudanca: menos carga inicial na thread principal, menor TBT e menor CLS no primeiro carregamento.
+- Pendencias: medir novamente no PSI (mobile) e comparar TBT/SI/CLS.
+
+### Proximos passos recomendados
+- Executar `npm run build:web:sync`.
+- Testar menu e scroll no `localhost` e depois rodar PSI.

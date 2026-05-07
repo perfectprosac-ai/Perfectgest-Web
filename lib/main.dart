@@ -75,7 +75,6 @@ class _SiteHomePageState extends State<SiteHomePage> {
   final GlobalKey _portfolioKey = GlobalKey();
   final GlobalKey _contactKey = GlobalKey();
   static const double _headerHeight = 76;
-  static const Duration _heavySectionsDelay = Duration(milliseconds: 900);
   int _mobileNavIndex = 0;
   bool _deferHeavySections = true;
 
@@ -84,16 +83,19 @@ class _SiteHomePageState extends State<SiteHomePage> {
     super.initState();
     seo_meta.applyHomePageSeoMetaTags();
     _scrollController.addListener(_onScroll);
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future<void>.delayed(_heavySectionsDelay);
-      if (!mounted) return;
-      setState(() => _deferHeavySections = false);
-    });
+  }
+
+  void _enableHeavySections() {
+    if (!_deferHeavySections || !mounted) return;
+    setState(() => _deferHeavySections = false);
   }
 
   void _onScroll() {
     if (!_scrollController.hasClients) return;
     _scrollPixels.value = _scrollController.offset;
+    if (_scrollController.offset > 48) {
+      _enableHeavySections();
+    }
   }
 
   @override
@@ -105,6 +107,7 @@ class _SiteHomePageState extends State<SiteHomePage> {
   }
 
   void _scrollTo(GlobalKey key) {
+    _enableHeavySections();
     final ctx = key.currentContext;
     if (ctx == null) return;
     final box = ctx.findRenderObject() as RenderBox?;
@@ -183,9 +186,26 @@ class _SiteHomePageState extends State<SiteHomePage> {
                 SizedBox(height: isMobileNav ? 12 : _headerHeight + 12),
                 HeroSection(key: _homeKey, scrollListenable: _scrollPixels),
                 if (_deferHeavySections) ...[
-                  const _DeferredSectionSkeleton(title: 'Solucoes (App/Web)', key: ValueKey('sk-solutions')),
-                  const _DeferredSectionSkeleton(title: 'Portfolio', key: ValueKey('sk-portfolio')),
-                  const _DeferredSectionSkeleton(title: 'Contato', key: ValueKey('sk-contact')),
+                  _DeferredSectionSkeleton(
+                    key: _solutionsKey,
+                    title: 'Solucoes (App/Web)',
+                    estimatedHeight: 500,
+                  ),
+                  _DeferredSectionSkeleton(
+                    key: _portfolioKey,
+                    title: 'Portfolio',
+                    estimatedHeight: 340,
+                  ),
+                  _DeferredSectionSkeleton(
+                    key: _contactKey,
+                    title: 'Contato',
+                    estimatedHeight: 320,
+                  ),
+                  const _DeferredSectionSkeleton(
+                    key: ValueKey('sk-footer'),
+                    title: 'Privacidade, dados e cookies',
+                    estimatedHeight: 250,
+                  ),
                 ] else ...[
                   SectionCard(
                     key: _solutionsKey,
@@ -1933,9 +1953,10 @@ class SectionCard extends StatelessWidget {
 }
 
 class _DeferredSectionSkeleton extends StatelessWidget {
-  const _DeferredSectionSkeleton({required this.title, super.key});
+  const _DeferredSectionSkeleton({required this.title, required this.estimatedHeight, super.key});
 
   final String title;
+  final double estimatedHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -1960,7 +1981,7 @@ class _DeferredSectionSkeleton extends StatelessWidget {
             const SizedBox(height: 12),
             Container(
               width: double.infinity,
-              height: 64,
+              height: estimatedHeight,
               decoration: BoxDecoration(
                 color: cs.surface.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(10),
