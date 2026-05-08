@@ -1,6 +1,8 @@
 ﻿import 'elastic_service.dart';
 import 'politica_page.dart';
 import 'tecnologias_page.dart';
+import 'legal_subpages.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'web_cookie_consent_stub.dart' if (dart.library.html) 'web_cookie_consent_web.dart' as cookie_consent;
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
@@ -27,6 +29,9 @@ bool allowStaticHeroDecor(BuildContext context) => !MediaQuery.disableAnimations
 
 void main() {
   seo_meta.applySeoMetaTags();
+  if (kIsWeb) {
+    setUrlStrategy(PathUrlStrategy());
+  }
   runApp(const PerfectProSiteApp());
 }
 
@@ -54,7 +59,12 @@ class _PerfectProSiteAppState extends State<PerfectProSiteApp> {
       theme: buildPerfectProLightTheme(),
       darkTheme: buildPerfectProDarkTheme(),
       themeMode: _themeMode,
+      initialRoute: kIsWeb && Uri.base.path.isNotEmpty ? Uri.base.path : '/',
       home: SiteHomePage(onToggleTheme: _toggleTheme),
+      routes: {
+        '/politica-privacidade-perfectgest-i': (_) => const PoliticaPrivacidadePerfectGestIPage(),
+        '/politica-exclusao-dados-perfectgest-i': (_) => const PoliticaExclusaoDadosPerfectGestIPage(),
+      },
     );
   }
 }
@@ -1203,7 +1213,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      if (allowRichMotion(context)) {
+      if (allowStaticHeroDecor(context)) {
         _ambient.repeat();
       } else {
         _ambient.value = 0;
@@ -1221,6 +1231,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     final motion = allowRichMotion(context);
     final staticDecor = allowStaticHeroDecor(context);
+    final accentMotion = staticDecor;
     final cs = Theme.of(context).colorScheme;
     return Semantics(
       label: 'Secao principal de apresentacao',
@@ -1239,8 +1250,8 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                   final isCompactHero = screenWidth < 760;
                   final heroTitleSize = isCompactHero ? 28.0 : 36.0;
                   final heroSubtitleSize = isCompactHero ? 15.0 : 18.0;
-                  final pulse = motion ? (0.45 + 0.55 * (0.5 + 0.5 * math.sin(_ambient.value * math.pi * 2))) : 0.55;
-                  final beat = motion ? (0.5 + 0.5 * math.sin(_ambient.value * math.pi * 6)) : 0.5;
+                  final pulse = accentMotion ? (0.45 + 0.55 * (0.5 + 0.5 * math.sin(_ambient.value * math.pi * 2))) : 0.55;
+                  final beat = accentMotion ? (0.5 + 0.5 * math.sin(_ambient.value * math.pi * 6)) : 0.5;
                   final borderColor = Color.lerp(cs.outline, cs.primary, pulse * 0.55)!;
                   final neonPhase = (_ambient.value * 3) % 1;
                   final neonIndex = (_ambient.value * 3).floor() % 3;
@@ -1261,7 +1272,7 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                       color: cs.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: borderColor, width: 1),
-                      boxShadow: motion
+                      boxShadow: accentMotion
                           ? [
                               BoxShadow(
                                 color: neonColor.withValues(alpha: 0.30 + (beat * 0.14)),
@@ -1277,6 +1288,12 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                                 color: const Color(0xFFFF2BD6).withValues(alpha: 0.08 + ((1 - beat) * 0.10)),
                                 blurRadius: 38 + ((1 - beat) * 16),
                                 spreadRadius: 0.4 + ((1 - beat) * 1.2),
+                              ),
+                              BoxShadow(
+                                color: neonColor.withValues(alpha: 0.24 + (beat * 0.16)),
+                                blurRadius: 56 + (beat * 24),
+                                spreadRadius: 0.8 + (beat * 2.0),
+                                offset: Offset(0, 14 + (beat * 8)),
                               ),
                             ]
                           : [
@@ -1310,14 +1327,14 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                               ? ShaderMask(
                                   blendMode: BlendMode.srcIn,
                                   shaderCallback: (bounds) {
-                                    final angle = motion ? _ambient.value * math.pi * 1.25 : 0.0;
+                                    final angle = accentMotion ? _ambient.value * math.pi * 1.25 : 0.0;
                                     return LinearGradient(
                                       colors: [
-                                        cs.onSurface.withValues(alpha: 0.55),
-                                        cs.primary,
-                                        cs.onSurface.withValues(alpha: 0.85),
+                                        const Color(0xFF00F5FF),
+                                        const Color(0xFFFF2BD6),
+                                        const Color(0xFF39FF14),
                                       ],
-                                      stops: const [0.15, 0.5, 0.85],
+                                      stops: const [0.05, 0.5, 0.95],
                                       transform: GradientRotation(angle),
                                     ).createShader(bounds);
                                   },
@@ -1346,14 +1363,14 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                             ? ShaderMask(
                                 blendMode: BlendMode.srcIn,
                                 shaderCallback: (bounds) {
-                                  final angle = motion ? _ambient.value * math.pi * 1.25 : 0.0;
+                                  final angle = accentMotion ? _ambient.value * math.pi * 1.25 : 0.0;
                                   return LinearGradient(
                                     colors: [
-                                      cs.onSurface.withValues(alpha: 0.55),
-                                      cs.primary,
-                                      cs.onSurface.withValues(alpha: 0.85),
+                                      const Color(0xFF00F5FF),
+                                      const Color(0xFFFF2BD6),
+                                      const Color(0xFF39FF14),
                                     ],
-                                    stops: const [0.15, 0.5, 0.85],
+                                    stops: const [0.05, 0.5, 0.95],
                                     transform: GradientRotation(angle),
                                   ).createShader(bounds);
                                 },
@@ -1388,14 +1405,14 @@ class _HeroSectionState extends State<HeroSection> with SingleTickerProviderStat
                             ? ShaderMask(
                                 blendMode: BlendMode.srcIn,
                                 shaderCallback: (bounds) {
-                                  final angle = motion ? _ambient.value * math.pi * 1.25 : 0.0;
+                                  final angle = accentMotion ? _ambient.value * math.pi * 1.25 : 0.0;
                                   return LinearGradient(
                                     colors: [
-                                      cs.onSurface.withValues(alpha: 0.55),
-                                      cs.primary,
-                                      cs.onSurface.withValues(alpha: 0.85),
+                                      const Color(0xFF00F5FF),
+                                      const Color(0xFFFF2BD6),
+                                      const Color(0xFF39FF14),
                                     ],
-                                    stops: const [0.15, 0.5, 0.85],
+                                    stops: const [0.05, 0.5, 0.95],
                                     transform: GradientRotation(angle),
                                   ).createShader(bounds);
                                 },

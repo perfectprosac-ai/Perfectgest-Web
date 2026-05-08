@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'app_theme.dart';
 import 'seo_meta_stub.dart' if (dart.library.html) 'seo_meta_web.dart' as seo_meta;
+import 'tecnologias_page.dart';
 import 'web_cookie_consent_stub.dart' if (dart.library.html) 'web_cookie_consent_web.dart' as cookie_consent;
 
 /// Política própria PerfectGest: privacidade, dados, cookies e termos (alinhado a boas práticas Google para sites e medição).
@@ -122,10 +123,17 @@ class _PoliticaPrivacidadePageState extends State<PoliticaPrivacidadePage> {
                         body:
                             'Quando o Google Analytics está configurado neste site, o tratamento de dados associado segue as políticas do Google. '
                             'Recomendamos a leitura das páginas oficiais do Google sobre privacidade, cookies e parceiros tecnológicos.',
-                        links: const [
-                          _PoliticaLink('Privacidade Google', 'https://policies.google.com/privacy'),
-                          _PoliticaLink('Cookies Google', 'https://policies.google.com/technologies/cookies'),
-                          _PoliticaLink('Parceiros tecnológicos', 'https://policies.google.com/technologies/partners'),
+                        links: [
+                          const _PoliticaLink('Privacidade Google', url: 'https://policies.google.com/privacy'),
+                          const _PoliticaLink('Cookies Google', url: 'https://policies.google.com/technologies/cookies'),
+                          _PoliticaLink(
+                            'Parceiros tecnológicos',
+                            onTap: () {
+                              Navigator.of(context).push<void>(
+                                MaterialPageRoute<void>(builder: (_) => const TecnologiasPage()),
+                              );
+                            },
+                          ),
                         ],
                       ),
                       _PoliticaSection(
@@ -212,9 +220,11 @@ class _PoliticaPrivacidadePageState extends State<PoliticaPrivacidadePage> {
 }
 
 class _PoliticaLink {
-  const _PoliticaLink(this.label, this.url);
+  const _PoliticaLink(this.label, {this.url, this.onTap})
+      : assert(url != null || onTap != null, 'Informe url ou ação interna.');
   final String label;
-  final String url;
+  final String? url;
+  final VoidCallback? onTap;
 }
 
 class _PoliticaSection extends StatelessWidget {
@@ -277,11 +287,20 @@ class _PoliticaSection extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            onPressed: () => launchUrl(
-                              Uri.parse(links[i].url),
-                              mode: LaunchMode.externalApplication,
-                              webOnlyWindowName: kIsWeb ? '_blank' : null,
-                            ),
+                            onPressed: () {
+                              final onTap = links[i].onTap;
+                              final url = links[i].url;
+                              if (onTap != null) {
+                                onTap();
+                                return;
+                              }
+                              if (url == null) return;
+                              launchUrl(
+                                Uri.parse(url),
+                                mode: LaunchMode.externalApplication,
+                                webOnlyWindowName: kIsWeb ? '_blank' : null,
+                              );
+                            },
                             child: Text(
                               links[i].label,
                               style: GoogleFonts.inter(fontSize: mqW < 360 ? 12.5 : 13),
@@ -298,11 +317,20 @@ class _PoliticaSection extends StatelessWidget {
                       children: links
                           .map(
                             (l) => TextButton(
-                              onPressed: () => launchUrl(
-                                Uri.parse(l.url),
-                                mode: LaunchMode.externalApplication,
-                                webOnlyWindowName: kIsWeb ? '_blank' : null,
-                              ),
+                              onPressed: () {
+                                final onTap = l.onTap;
+                                final url = l.url;
+                                if (onTap != null) {
+                                  onTap();
+                                  return;
+                                }
+                                if (url == null) return;
+                                launchUrl(
+                                  Uri.parse(url),
+                                  mode: LaunchMode.externalApplication,
+                                  webOnlyWindowName: kIsWeb ? '_blank' : null,
+                                );
+                              },
                               child: Text(l.label, style: GoogleFonts.inter(fontSize: 13)),
                             ),
                           )

@@ -1,0 +1,11 @@
+# DIRETRIZES TÉCNICAS - PERFECTPRO ONE
+- Arquivo só de leitura, Nunca alterar as regras desse arquivo e nem do arquivo Prompt_IA
+
+## 1. Fluxo de Contexto Permanente
+- **Início:** Ler obrigatoriamente arquivo a ser alterado antes de qualquer ação.
+- **Identidade:** Consultar `Prompt_IA.md` para diretrizes de comportamento e missão.
+
+## 2. Restrições de Pastas e Arquivos
+- **Pastas BKP*:** Proibido editar ou usar como fonte de verdade. São apenas backups.
+- **UI Estática:** Não alterar codigo sem ordem explícita.
+- **Variantes:** Consultar `docs/Atualiza.md` para planeamento, mas não criar estruturas novas sem autorização.

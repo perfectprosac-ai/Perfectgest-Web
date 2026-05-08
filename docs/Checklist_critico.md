@@ -1,4 +1,4 @@
-**Onde está o código do app:** monorepo em `Site_PrefectPro/` — o Flutter (Android, iOS, **macOS**) fica em **`apps/novo_app/`**. A pasta **`macos/`** deve estar ao lado de `lib/` e `pubspec.yaml`, ou seja **`apps/novo_app/macos/`**, não na raiz do repositório.
+**Onde está o código do app:** monorepo em `PerfectPro/` — o Flutter (Android, iOS, **macOS**) fica em **`apps/novo_app/`**. A pasta **`macos/`** deve estar ao lado de `lib/` e `pubspec.yaml`, ou seja **`apps/novo_app/macos/`**, não na raiz do repositório.
 
 ---
 

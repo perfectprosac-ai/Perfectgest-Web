@@ -1,7 +1,11 @@
 {
   "scripts": {
     "test:elastic": "node scripts/test-elastic-deps.cjs",
-    "server:elastic": "node scripts/elastic-ingest-server.js"
+    "server:elastic": "node scripts/elastic-ingest-server.js",
+    "build:web:sync": "flutter build web --release --pwa-strategy=none",
+    "serve:web:sync": "node scripts/serve-build-web.cjs",
+    "local:web:sync": "npm run build:web:sync && npm run serve:web:sync",
+    "publish-web": "node scripts/publish-web.cjs"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^9.3.4",

@@ -819,3 +819,219 @@ Preencher esta secao ao final de cada entrega relevante. Quando nao houver dado,
 ### Proximos passos recomendados
 - Executar `npm run build:web:sync`.
 - Testar menu e scroll no `localhost` e depois rodar PSI.
+
+## [2026-05-07 15:51] Endurecimento de seguranca web (CSP/COOP/clickjacking)
+
+### Contexto
+- Pedido: tratar alertas de seguranca (CSP eficaz, COOP, clickjacking, riscos de XSS).
+- Escopo: cabecalho HTML em `web/index.html`.
+
+### Arquivos alterados
+- web/index.html
+- docs/Atualiza.md
+
+### O que foi feito
+- Adicionado `Cross-Origin-Opener-Policy` via meta:
+  - `same-origin`
+- Endurecida CSP existente com diretivas de mitigacao:
+  - `object-src 'none'`
+  - `frame-ancestors 'none'` (mitiga clickjacking de forma CSP)
+  - `upgrade-insecure-requests`
+- Mantidas diretivas necessarias para Flutter Web + GA4.
+
+### Risco de regressao
+- Baixo/Medio: politicas mais restritivas podem afetar embeds em `iframe` caso existam.
+- Pontos sensiveis: se o site precisar ser embutido em outro dominio, ajustar `frame-ancestors`.
+
+### Validacao executada
+- [x] Revisao manual do `index.html`
+- [ ] Build local
+- [ ] Verificacao de console no browser apos deploy
+- [ ] Re-scan de seguranca
+
+### Resultado
+- Comportamento esperado apos a mudanca: baseline de seguranca mais forte para XSS/clickjacking e isolamento de origem.
+- Pendencias: configurar cabecalhos HTTP no Render para cobertura completa (X-Frame-Options/Trusted-Types em nivel de servidor).
+
+### Proximos passos recomendados
+- Rodar `npm run build:web:sync` e publicar.
+- Validar novamente o diagnostico de seguranca.
+
+## [2026-05-07 22:23] Criacao de subpaginas legais dedicadas
+
+### Contexto
+- Pedido: criar 2 subpaginas sem navegacao, com os titulos:
+  - "Política de Privacidade PerfectGest I"
+  - "Política de exclusão de Dados PerfectGest I"
+- Escopo: novas paginas Flutter Web e documentos em `docs/`.
+
+### Arquivos alterados
+- lib/main.dart
+- lib/legal_subpages.dart
+- docs/Politica_Privacidade_PerfectGest_I.md
+- docs/Politica_Exclusao_Dados_PerfectGest_I.md
+- docs/Atualiza.md
+
+### O que foi feito
+- Criadas duas paginas Flutter Web dedicadas, sem entrada no menu principal:
+  - `/politica-privacidade-perfectgest-i`
+  - `/politica-exclusao-dados-perfectgest-i`
+- Cada pagina:
+  - exibe titulo correspondente;
+  - contem texto introdutorio e referencia ao documento em `docs/`;
+  - possui rodape com link clicavel para a propria URL (especialmente util no Web).
+- Adicionados documentos markdown em `docs/` com estrutura inicial dos textos.
+- Registradas rotas nomeadas no `MaterialApp` para permitir acesso direto via URL.
+
+### Risco de regressao
+- Baixo: novas rotas sem alteracao de fluxo principal.
+- Pontos sensiveis: garantir que URLs sejam comunicadas corretamente nas configuracoes externas (Play Console, politicas, etc.).
+
+### Validacao executada
+- [x] Revisao manual dos arquivos novos/alterados
+- [ ] Build web local completo
+- [ ] Teste manual de acesso direto as rotas
+
+### Resultado
+- Comportamento esperado apos a mudanca: duas subpaginas legais acessiveis por URL, com rodape que repete o nome da pagina e fornece link para ela mesma.
+- Pendencias: publicar novo build e validar no Render.
+
+### Proximos passos recomendados
+- Executar `npm run build:web:sync` e depois `npm run publish-web`.
+- Expor as novas URLs nas politicas/console conforme necessidade.
+
+## [2026-05-07 22:43] Isolamento total das subpaginas legais
+
+### Contexto
+- Pedido: nas subpaginas legais nao exibir quadro "Carregando experiencia web..." e remover navegacao para o restante do site.
+- Escopo: `web/index.html` e `lib/legal_subpages.dart`.
+
+### Arquivos alterados
+- web/index.html
+- lib/legal_subpages.dart
+- docs/Atualiza.md
+
+### O que foi feito
+- Adicionado bypass do loading shell para rotas legais:
+  - `/politica-privacidade-perfectgest-i`
+  - `/politica-exclusao-dados-perfectgest-i`
+- Removido `AppBar` das duas subpaginas para evitar elementos de navegacao.
+- Mantido apenas o conteudo da pagina e o rodape com link para a propria URL (como solicitado).
+
+### Risco de regressao
+- Baixo: alteracao pontual de UX em rotas especificas.
+- Pontos sensiveis: validar acesso direto por URL no localhost e no online.
+
+### Validacao executada
+- [x] Revisao manual dos trechos alterados
+- [ ] Build local
+- [ ] Teste manual das duas URLs
+
+### Resultado
+- Comportamento esperado apos a mudanca: paginas legais abrem diretas, sem loading shell e sem navegacao com o resto do site.
+- Pendencias: rebuild/publicacao para refletir no servidor.
+
+### Proximos passos recomendados
+- Executar `npm run build:web:sync`.
+- Testar as duas rotas no localhost.
+
+## [2026-05-07 23:01] Conteudo juridico nas subpaginas e reforco visual no Hero
+
+### Contexto
+- Pedido: aplicar o conteudo atualizado dos arquivos de politica em formato juridico nas paginas dedicadas e reativar efeito visual de letras coloridas no primeiro bloco.
+- Escopo: `lib/legal_subpages.dart` e `lib/main.dart`.
+
+### Arquivos alterados
+- lib/legal_subpages.dart
+- lib/main.dart
+- docs/Atualiza.md
+
+### O que foi feito
+- Substituido o texto resumido das duas subpaginas por estrutura juridica em secoes numeradas, baseada no conteudo de:
+  - `docs/Politica_Privacidade_PerfectGest_I.md`
+  - `docs/Politica_Exclusao_Dados_PerfectGest_I.md`
+- Organizado o texto em blocos legais reutilizaveis (`_LegalSection`) para melhor leitura formal.
+- Reforcado o efeito de letras coloridas no Hero principal com gradiente neon (ciano/magenta/verde) nas frases de destaque.
+
+### Risco de regressao
+- Baixo: alteracoes de conteudo e estilo visual.
+- Pontos sensiveis: validar legibilidade em modo claro/escuro.
+
+### Validacao executada
+- [x] Revisao manual dos textos e estilos
+- [ ] Build local
+- [ ] Validacao visual no localhost
+
+### Resultado
+- Comportamento esperado apos a mudanca: subpaginas com texto juridico completo e bloco inicial da home com letras coloridas destacadas.
+- Pendencias: rebuild/publicacao para refletir no servidor.
+
+### Proximos passos recomendados
+- Executar `npm run build:web:sync`.
+- Validar no localhost e depois publicar no online.
+
+## [2026-05-07 23:17] Reativacao de movimento no gradiente e sombra do Hero
+
+### Contexto
+- Pedido: reativar movimento colorido nas letras do primeiro bloco e sombra colorida animada abaixo do bloco principal.
+- Escopo: secao Hero em `lib/main.dart`.
+
+### Arquivos alterados
+- lib/main.dart
+- docs/Atualiza.md
+
+### O que foi feito
+- Reativado loop do `AnimationController` do Hero mesmo no modo de decoracao estatica.
+- Reintroduzida rotacao animada do gradiente (`GradientRotation`) nas frases destacadas.
+- Intensificada a sombra colorida do container com camada adicional e `offset` vertical animado para efeito de brilho em movimento na base do bloco.
+
+### Risco de regressao
+- Medio: aumento de efeitos visuais pode elevar custo de render em dispositivos fracos.
+- Pontos sensiveis: monitorar TBT/SI no mobile apos deploy.
+
+### Validacao executada
+- [x] Revisao manual do trecho alterado
+- [ ] Build local
+- [ ] Validacao visual no localhost
+
+### Resultado
+- Comportamento esperado apos a mudanca: gradiente de letras com movimento perceptivel e sombra neon animada abaixo do Hero.
+- Pendencias: rebuild e validacao no navegador.
+
+### Proximos passos recomendados
+- Rodar `npm run build:web:sync`.
+- Fazer `Ctrl + F5` e validar em desktop/mobile.
+
+## [2026-05-07 23:22] Correcao do link Parceiros tecnologicos na politica
+
+### Contexto
+- Pedido: no bloco "4. Google Analytics e serviços Google", o botão "Parceiros tecnológicos" deve abrir a página interna de parceiros tecnológicos, e não a URL do Google.
+- Escopo: `lib/politica_page.dart`.
+
+### Arquivos alterados
+- lib/politica_page.dart
+- docs/Atualiza.md
+
+### O que foi feito
+- Ajustado o item "Parceiros tecnológicos" para navegação interna via `Navigator` para `TecnologiasPage`.
+- Mantidos os links externos de "Privacidade Google" e "Cookies Google".
+- Evoluída a estrutura de links (`_PoliticaLink`) para suportar:
+  - URL externa (`url`)
+  - ação interna (`onTap`)
+
+### Risco de regressao
+- Baixo: ajuste pontual de ação de botão.
+- Pontos sensiveis: validar no web e mobile o comportamento do botão.
+
+### Validacao executada
+- [x] Revisao manual da implementacao
+- [ ] Build local
+- [ ] Teste manual do bloco 4 na pagina de politica
+
+### Resultado
+- Comportamento esperado apos a mudanca: botão "Parceiros tecnológicos" abre a página interna correspondente.
+- Pendencias: rebuild e validação no localhost.
+
+### Proximos passos recomendados
+- Executar `npm run build:web:sync`.
+- Testar a navegação a partir da página de política.

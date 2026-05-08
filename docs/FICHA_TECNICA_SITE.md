@@ -7,7 +7,7 @@
 | Nome do pacote | `perfectpro_web` |
 | Descrição | Site promocional PerfectPro — Flutter Web |
 | Versão | `1.0.0+1` (pubspec) |
-| Raiz do projeto | `apps/Web_app` |
+| Raiz do projeto | `PerfectPro/webs/Web_app` |
 | Repositório | Privado (`publish_to: none`) |
 
 ## 2. Stack e ambiente
@@ -108,4 +108,4 @@ Nota: em Windows, se a porta do servidor web já estiver em uso, o `flutter run`
 
 ---
 
-*Documento gerado a partir da estrutura do repositório `apps/Web_app`. Atualizar quando mudarem dependências, URLs oficiais ou fluxos de contacto.*
+*Documento gerado a partir da estrutura do repositório `PerfectPro/webs/Web_app`. Atualizar quando mudarem dependências, URLs oficiais ou fluxos de contacto.*

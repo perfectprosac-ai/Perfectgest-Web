@@ -21,9 +21,10 @@
   <!-- Boas práticas de segurança e privacidade (complementar cabeçalhos HTTP no servidor em produção) -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
   <!-- CSP permissiva para Flutter Web + Google Fonts + gtag; endurecer no servidor se possível -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://fonts.googleapis.com https://fonts.gstatic.com https://www.gstatic.com; worker-src 'self' blob:; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://fonts.googleapis.com https://fonts.gstatic.com https://www.gstatic.com; worker-src 'self' blob:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
   <meta name="theme-color" content="#00B4C8">
   <meta name="description" content="Software house especialista em Flutter, Java e SDKs para apps mobile, web e desktop com alta performance.">
   <meta name="keywords" content="Flutter, Java, SDK, PWA, SEO, Google Search Console, mobile, web, desktop">
@@ -88,6 +89,16 @@
       color: rgba(232, 247, 250, 0.84);
     }
   </style>
+  <script>
+    (function () {
+      var path = (window.location && window.location.pathname ? window.location.pathname : '').toLowerCase();
+      var standaloneLegalPaths = [
+        '/politica-privacidade-perfectgest-i',
+        '/politica-exclusao-dados-perfectgest-i',
+      ];
+      window.__ppSkipLoadingShell = standaloneLegalPaths.indexOf(path) >= 0;
+    })();
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-N4BVXV4HBC"></script>
   <script>
@@ -116,6 +127,10 @@
     (function () {
       const shell = document.getElementById('pp-loading-shell');
       if (!shell) return;
+      if (window.__ppSkipLoadingShell) {
+        shell.remove();
+        return;
+      }
       const hide = () => {
         shell.classList.add('hidden');
         setTimeout(() => shell.remove(), 260);
